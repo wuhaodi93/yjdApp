@@ -1,0 +1,76 @@
+<widget id="A6051969124755" version="0.0.1">
+
+    <name>姚江贷</name>
+
+    <description>
+        姚江贷APP
+    </description>
+
+    <author email="1501372739@qq.com" href="1501372739@qq.com">
+        1501372739
+    </author>
+
+    <content src="index.html"/>
+
+    <access origin="*"/>
+
+    <preference name="pageBounce" value="false"/>
+
+    <preference name="appBackground" value="rgba(0,0,0,0.0)"/>
+
+    <preference name="windowBackground" value="rgba(0,0,0,0.0)"/>
+
+    <preference name="frameBackgroundColor" value="rgba(0,0,0,0.0)"/>
+
+    <preference name="hScrollBarEnabled" value="true"/>
+
+    <preference name="vScrollBarEnabled" value="true"/>
+
+    <preference name="autoLaunch" value="true"/>
+
+    <preference name="fullScreen" value="false"/>
+
+    <preference name="autoUpdate" value="true"/>
+
+    <preference name="smartUpdate" value="true"/>
+
+    <preference name="debug" value="true"/>
+
+    <preference name="statusBarAppearance" value="true"/>
+
+    <permission name="readPhoneState"/>
+
+    <permission name="camera"/>
+
+    <permission name="record"/>
+
+    <permission name="location"/>
+
+    <permission name="fileSystem"/>
+
+    <permission name="internet"/>
+
+    <permission name="bootCompleted"/>
+
+    <permission name="hardware"/>
+    <feature name="bMap">
+        <param name="android_api_key" value="GUG6RAA4pnxHzfQiRWgrS1X1sPqgt4wv"/>
+        <param name="ios_api_key" value="IPT4v4HkWZKnaHvdcGtBXtd1Roa4sGPL"/>
+    </feature>
+    <feature name="wx">
+        <param name="urlScheme" value="wx0bf76893e24d4a39"/>
+        <param name="apiKey" value="wx0bf76893e24d4a39"/>
+        <param name="apiSecret" value="e9e8f3b7b923034bd10eb098f9917a81"/>
+    </feature>
+    <feature name="QQPlus">
+        <param name="urlScheme" value="tencent1106423123"/>
+        <param name="apiKey" value="1106423123"/>
+    </feature>
+    <!--以下是iOS配置项-->
+    <preference name="urlScheme" value="yaojiangdai"/>
+    <!--填写你在mob后台配置的iOS的URI Scheme值，注意这里不包含"://"-->
+    <!--以下是Android配置项-->
+    <!--这里Android不需要配置scheme,mob后台的android scheme必须是lovemoblink://，见步骤4说明-->
+    <!--Mob-AppKey是固定值，value换成你的App Key-->
+    <meta-data name="Mob-AppKey" value="21df97c376228"/>
+</widget>

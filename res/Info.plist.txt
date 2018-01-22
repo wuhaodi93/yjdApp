@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>MOBAppKey</key><!--固定key值-->
+    <string>21df97c376228</string><!--换成你的mob的app key-->
+    <key>MOBAppSecret</key><!--固定key值-->
+    <string> d6da9c3a524188bfc7d67f9e8f758856</string><!--换成你的mob的app secret-->
+</dict>
+</plist>

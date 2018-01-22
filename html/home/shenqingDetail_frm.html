@@ -1,0 +1,149 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>Hello APP</title>
+    <link rel="stylesheet" type="text/css" href="../../css/aui.css" />
+    <style>
+        body {
+            background-color: #eee;
+        }
+
+        .ul-list {
+            margin: 15px;
+        }
+
+        .list-item {
+            padding: 0.4rem 0.75rem;
+            border-top: solid 1px #f5f5f5;
+        }
+
+        .aui-list .aui-list-item-title {
+            font-size: 0.7rem;
+            position: relative;
+            max-width: 100%;
+            color: #757575;
+        }
+
+        .block-inner {
+            display: block !important;
+        }
+
+        .uhide {
+            display: none !important;
+        }
+    </style>
+</head>
+
+<body>
+    <ul class="aui-list aui-list-in ul-list">
+        <li class="aui-list-header">
+            申请单
+        </li>
+        <li class="list-item" id="companyShow">
+            <div class="aui-list-item-inner">
+                <div class="aui-list-item-title">公司名称：</div>
+                <div class="aui-list-item-title" id="company"></div>
+            </div>
+        </li>
+        <li class="list-item">
+            <div class="aui-list-item-inner">
+                <div class="aui-list-item-title">贷款名称：</div>
+                <div class="aui-list-item-title" id="title"></div>
+            </div>
+        </li>
+        <li class="list-item">
+            <div class="aui-list-item-inner block-inner">
+                <div class="aui-list-item-title">贷款简介：</div>
+                <div class=" aui-list-item-title" id="desc"></div>
+            </div>
+        </li>
+        <li class="list-item">
+            <div class="aui-list-item-inner">
+                <div class="aui-list-item-title">申请人：</div>
+                <div class="aui-list-item-title" id="name"></div>
+            </div>
+        </li>
+        <li class="list-item">
+            <div class="aui-list-item-inner">
+                <div class="aui-list-item-title">手机号：</div>
+                <div class="aui-list-item-title" id="phone"></div>
+            </div>
+        </li>
+    </ul>
+    <section class="aui-content-padded" onclick="submit()" style="padding-top:50px;">
+        <div class="aui-btn aui-btn-block aui-btn-success aui-btn-sm" tapmode>立即申请</div>
+    </section>
+</body>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../script/common.js"></script>
+<script type="text/javascript" src="../../script/config.js"></script>
+<script type="text/javascript">
+    //引用公共js方法
+    var Comm = Common();
+    var Config = Config();
+    apiready = function() {
+        getDetail();
+    };
+
+    function getDetail() {
+        var token = $api.getStorage('token');
+        var listId = api.pageParam.listId;
+        var getQRCodeInfoUrl = Config.getQRCodeInfoUrl + "?merchantId=" + listId + "&token=" + token;
+        Comm.ajax(getQRCodeInfoUrl, "", "get", function(res) {
+            //alert(JSON.stringify(res));
+            if (res.state == "1") {
+                $api.byId('title').innerHTML = res.data.title||'';
+                $api.byId('desc').innerHTML = res.data.content||'';
+                $api.byId('name').innerHTML = res.data.name||'';
+                $api.byId('phone').innerHTML = res.data.phone||'';
+                if (res.data.typeId == 2) {
+                    $api.byId('company').innerHTML = res.data.companyName||'';
+                    $api.removeCls($api.byId("companyShow"), 'uhide');
+                } else {
+                    $api.addCls($api.byId("companyShow"), 'uhide');
+                }
+            } else {
+                api.alert({
+                    msg: res.message,
+                });
+            }
+        });
+    }
+
+    function submit() {
+        var token = $api.getStorage('token');
+        var listId = api.pageParam.listId;
+        var shenqingUrl = Config.getDoApplicationUrl + "?id=" + listId + "&token=" + token;
+        api.showProgress({
+            title: '提交中，请稍候...',
+            text: '先喝杯茶...',
+            modal: false
+        });
+        Comm.ajax(shenqingUrl, "", "get", function(res) {
+            //alert(JSON.stringify(res));
+            api.hideProgress();
+            if (res.state == "1") {
+                api.confirm({
+                    title: '提示消息',
+                    msg: '申请成功，稍后工作人员将与您联系，请耐心等候！',
+                    buttons: ['关闭页面', '取消']
+                }, function(ret, err) {
+                    var index = ret.buttonIndex; //1-关闭
+                    if (index == 1) {
+                        api.closeWin({});
+                    }
+                });
+            } else {
+                api.alert({
+                    msg: res.message,
+                });
+            }
+        });
+    }
+</script>
+
+</html>

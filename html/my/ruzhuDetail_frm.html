@@ -1,0 +1,285 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>入驻详情</title>
+    <link rel="stylesheet" type="text/css" href="../../css/aui.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/common.css" />
+    <style>
+        body {
+            background-color: #eee;
+        }
+
+        .ul-list {
+            margin: 15px;
+        }
+
+        .list-item {
+            padding: 0.4rem 0.75rem;
+            border-top: solid 1px #f5f5f5;
+        }
+
+        .aui-list .aui-list-item-title {
+            font-size: 0.7rem;
+            position: relative;
+            max-width: 100%;
+            color: #757575;
+        }
+
+        .test-li {
+            display: block;
+            padding-top: 0.5rem;
+            padding-bottom: 0.5rem;
+        }
+
+        .block-inner {
+            display: block !important;
+        }
+
+        .aui-list {
+            border: none;
+            background-size: 100% 1px;
+            background-repeat: no-repeat;
+            background-position: top;
+            background-image: linear-gradient(0, #fff, #fff 50%, transparent 50%);
+            border-radius: 5px;
+        }
+
+        .aui-list-header {
+            text-align: center;
+            display: block !important;
+            font-size: 0.7rem !important;
+            color: orange;
+            background-color: #fff !important;
+            border-top-left-radius: 5px;
+            border-top-right-radius: 5px;
+        }
+
+        .date-time {
+            padding: 10px 0 0 0;
+            text-align: center;
+            font-size: 0.65rem;
+            color: #757575;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="ruzhuNote"></div>
+    <script type="template" id="ruzhuNote-tmpl">
+        {{ if(it.length>0){ }} {{ for(var i=0;i
+        <it.length;i++){ }} <ul class="aui-list aui-list-in ul-list" style="margin:0">
+            {{ if( '{{=it[i].status}}'==1){ }}
+            <li class="aui-list-header" style="color:orange;">
+                {{=it[i].statuName}}
+            </li>
+            {{ } }} {{ if('{{=it[i].status}}'==2){ }}
+            <li class="aui-list-header" style="color:green;">
+                {{=it[i].statuName}}
+            </li>
+            {{ } }} {{ if('{{=it[i].status}}'==3){ }}
+            <li class="aui-list-header" style="color:red;">
+                {{=it[i].statuName}}
+            </li>
+            {{ } }}
+            <li class="list-item">
+                <div class="aui-list-item-inner">
+                    <div class="aui-list-item-title">申请类别：</div>
+                    <div class="aui-list-item-title">{{=it[i].applyType}}</div>
+                </div>
+            </li>
+            <li class="list-item">
+                <div class="aui-list-item-inner">
+                    <div class="aui-list-item-title">入驻版本：</div>
+                    <div class="aui-list-item-title">{{=it[i].merchantType}}版</div>
+                </div>
+            </li>
+            <li class="list-item">
+                <div class="aui-list-item-inner">
+                    <div class="aui-list-item-title">商户名称：</div>
+                    <div class="aui-list-item-title">{{=it[i].title}}</div>
+                </div>
+            </li>
+            {{ if('{{=it[i].typeId}}'==2){ }}
+            <li class="list-item">
+                <div class="aui-list-item-inner">
+                    <div class="aui-list-item-title">公司名称：</div>
+                    <div class="aui-list-item-title">{{=it[i].companyName||''}}</div>
+                </div>
+            </li>
+            <li class="list-item">
+                <div class="aui-list-item-inner">
+                    <div class="aui-list-item-title">信用代码：</div>
+                    <div class=" aui-list-item-title">{{=it[i].creditCode}}</div>
+                </div>
+            </li>
+            {{ } }}
+            <li class="list-item">
+                <div class="aui-list-item-inner block-inner">
+                    <div class="aui-list-item-title">产品简介：</div>
+                    <div class=" aui-list-item-title">{{=it[i].content}}</div>
+                </div>
+            </li>
+            {{ if('{{=it[i].status}}'==3){ }}
+            <li class="list-item">
+                <div class="aui-list-item-inner block-inner">
+                    <div class="aui-list-item-title">失败原因：</div>
+                    <div class=" aui-list-item-title">{{=it[i].failedMessage||''}}</div>
+                </div>
+            </li>
+            {{ } }}
+            <li class="list-item">
+                <div class="aui-list-item-inner">
+                    <div class="aui-row aui-row-padded">
+                        <div class="aui-col-xs-6" onclick="openImg('{{=it[i].img}}')">
+                            <div class="aui-list-item-title">商户图标</div>
+                            <img src="{{=it[i].img}}" style="height:4rem;width:65%;" />
+                        </div>
+                        {{ if('{{=it[i].typeId}}'==2){ }}
+                        <div class="aui-col-xs-6" onclick="openImg('{{=it[i].zipBusinessLicense}}')">
+                            <div class="aui-list-item-title">营业执照</div>
+                            <img src="{{=it[i].zipBusinessLicense}}" style="height:4rem;width:65%;" />
+                        </div>
+                        {{ } }}
+                    </div>
+                </div>
+            </li>
+            {{ if( '{{=it[i].status}}'==2){ }}
+            <li class="list-item">
+                <div class="aui-list-item-inner" onclick="openImg('{{=it[i].qrPath}}')">
+                    <div class="aui-list-item-title">二维码</div>
+                    <img src="{{=it[i].qrPath}}" style="height:1.5rem;" id="erweima" />
+                </div>
+            </li>
+            {{ } }}
+            <li class="list-item">
+                <div class="aui-list-item-inner">
+                    <div class="aui-list-item-title">入驻时间：</div>
+                    <div class=" aui-list-item-title">{{=it[i].createDate}}</div>
+                </div>
+            </li>
+            </ul>
+            {{ } }} {{ }else{ }}
+            <div class="noData">
+                <img src="../../image/noData3.png" />
+                <div>暂无数据</div>
+            </div>
+            {{ } }}
+    </script>
+</body>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../script/doT.min.js"></script>
+<script type="text/javascript" src="../../script/common.js"></script>
+<script type="text/javascript" src="../../script/config.js"></script>
+<script type="text/javascript">
+    //引用公共js方法
+    var Comm = Common();
+    var Config = Config();
+    apiready = function() {
+        getRuzhuDetail(api.pageParam.applyInfoId);
+        shareCode();
+    };
+
+    //点击图片查看
+    function openImg(imgUrl) {
+        Comm.openImageBrowser(imgUrl);
+    }
+
+    //分享二维码
+    function shareCode() {
+        api.addEventListener({
+            name: 'shareCode'
+        }, function(ret, err) {
+            var erweimaImg = $api.attr($api.byId('erweima'), 'src');
+            if (erweimaImg) {
+                share(erweimaImg);
+            } else {
+                api.toast({
+                    msg: '审核通过后才能分享！',
+                    duration: 3000,
+                    location: "middle"
+                });
+            }
+        });
+    }
+
+    //获取入驻详情
+    function getRuzhuDetail(applyInfoId) {　
+        var getRuzhuDetailUrl = Config.getRuzhuDetailUrl + "?applyInfoId=" + applyInfoId;
+        api.showProgress({
+            title: '努力加载中...',
+            text: '先喝杯茶...',
+            modal: false
+        });
+        //获取列表项
+        Comm.ajax(getRuzhuDetailUrl, "", "get", function(res) {
+            //alert(JSON.stringify(res)); //res.data.pageInfo
+            api.hideProgress();
+            if (res.state == "1") {
+                var tmpl = doT.template($api.byId('ruzhuNote-tmpl').innerHTML);
+                $api.byId('ruzhuNote').innerHTML = tmpl(res.data);　
+            } else {
+                api.alert({
+                    msg: res.message,
+                });
+            }
+        });
+    }
+    //分享
+    function share(imgUrl) {
+        var MNActionButton = api.require('MNActionButton');
+        MNActionButton.open({
+            layout: {
+                row: 1,
+                col: 3,
+                rowSpacing: 10,
+                colSpacing: 20,
+                offset: 0
+            },
+            animation: true,
+            autoHide: true,
+            styles: {
+                maskBg: 'rgba(0,0,0,0.2)',
+                bg: '#fff',
+                cancelButton: {
+                    size: 44,
+                    bg: '#fff',
+                    icon: 'widget://res/action-button-cancel.png'
+                },
+                item: {
+                    titleColor: '#888',
+                    titleHighlight: 'dd2727',
+                    titleSize: 12
+                },
+                indicator: {
+                    color: '#c4c4c4',
+                    highlight: '#9e9e9e'
+                }
+            },
+            items: [{
+                icon: 'widget://image/share/qq.png',
+                title: 'QQ好友'
+            }, {
+                icon: 'widget://image/share/wxsession.png',
+                title: '微信好友'
+            }, {
+                icon: 'widget://image/share/wxtimeline.png',
+                title: '朋友圈'
+            }]
+        }, function(ret) {
+            //alert(JSON.stringify(ret.index));
+            if (ret.index == 0) {
+                Comm.qqShareImg("QFriend", imgUrl);
+            } else if (ret.index == 1) {
+                Comm.wxShareImg("session", imgUrl);
+            } else if (ret.index == 2) {
+                Comm.wxShareImg("timeline", imgUrl);
+            }
+        });
+    }
+</script>
+
+</html>

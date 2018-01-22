@@ -1,0 +1,86 @@
+.aui-bar-light {
+    color: #ffffff;
+    background-color: #009688;
+    border-bottom: 1px solid #dddddd;
+}
+
+.color-whit {
+    color: #ffffff !important;
+}
+
+img {
+    max-width: 100%;
+    display: block;
+}
+
+.contain {
+    background-color: #f8f8f8;
+}
+
+.aboutus img {
+    width: 100%;
+    height: 300px;
+}
+
+.company-content img {
+	margin: 10px 20px;
+	width: 90%;
+	height: auto;
+}
+
+.company-cn {
+    font-size: 1.15rem;
+    text-align: center;
+    padding: 10px 0;
+    font-weight: bold;
+}
+
+.company-en {
+    font-size: 0.85rem;
+    text-align: center;
+    font-weight: bold;
+}
+
+.company-en .txt-orange {
+    margin-left: 10px;
+    color: orange;
+}
+
+.contactTxt-orange {
+    color: orange;
+}
+
+.company-content {
+    text-align: left;
+    padding: 15px 10px 0;
+    font-size: 0.7rem;
+    line-height: 1.5rem;
+    color: #949494;
+}
+
+.contactus-con {
+    padding: 20px 10px;
+}
+
+.contactus-con img {
+    width: 1.5rem;
+    height: 1.1rem;
+    float: right;
+    margin-right: 15px;
+}
+
+.contactus-con span {
+    font-size: 0.7rem;
+    text-align: left;
+    color: #949494;
+}
+
+
+/* 地图 */
+
+.footer {
+    font-size: 0.65rem;
+    color: #949494;
+    text-align: center;
+    padding: 40px 0;
+}

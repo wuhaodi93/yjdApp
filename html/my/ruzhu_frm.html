@@ -1,0 +1,270 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>入驻</title>
+    <link rel="stylesheet" type="text/css" href="../../css/aui.css" />
+    <style>
+        .imgSize {
+            font-size: 0.65rem;
+            padding-left: 0.25rem;
+            color: red;
+        }
+
+        .uhide {
+            display: none !important;
+        }
+    </style>
+</head>
+
+<body>
+    <ul class="aui-list aui-form-list">
+        <li class="aui-list-item">
+            <div class="aui-list-item-inner">
+                <div class="aui-list-item-label">
+                    商户名称
+                </div>
+                <div class="aui-list-item-input">
+                    <input type="text" placeholder="请输入商户名称" id="shanghuName">
+                </div>
+            </div>
+        </li>
+        <li class="aui-list-item u-hide">
+            <div class="aui-list-item-inner">
+                <div class="aui-list-item-label">
+                    信用代码
+                </div>
+                <div class="aui-list-item-input">
+                    <input type="text" placeholder="请输入企业信用代码" id="xinyong">
+                </div>
+            </div>
+        </li>
+        <li class="aui-list-item u-hide">
+            <div class="aui-list-item-inner">
+                <div class="aui-list-item-label">
+                    公司名称
+                </div>
+                <div class="aui-list-item-input">
+                    <input type="text" placeholder="请输入公司名称" id="company">
+                </div>
+            </div>
+        </li>
+        <li class="aui-list-item">
+            <div class="aui-list-item-inner">
+                <div class="aui-list-item-label">
+                    产品简介
+                </div>
+                <div class="aui-list-item-input">
+                    <textarea placeholder="在这里输入内容..." id="content"></textarea>
+                </div>
+            </div>
+        </li>
+    </ul>
+    <ul class="aui-list aui-media-list aui-margin-t-15 u-hide">
+        <li class="aui-list-item">
+            <div class="aui-list-item-inner">
+                <div class="aui-list-item-title">营业执照</div>
+                <div class="aui-row aui-row-padded">
+                    <div class="aui-col-xs-4" onclick="openCamera(1)">
+                        <img src="../../image/my/add3.png" style="height:5.5rem;" id="yingyeImg" />
+                    </div>
+                </div>
+            </div>
+        </li>
+    </ul>
+    <ul class="aui-list aui-media-list aui-margin-t-15">
+        <li class="aui-list-item">
+            <div class="aui-list-item-inner">
+                <div class="aui-list-item-title">商户图标<span class="imgSize">建议大小不超过1M</span></div>
+                <div class="aui-row aui-row-padded">
+                    <div class="aui-col-xs-4" onclick="openCamera(2)">
+                        <img src="../../image/my/add3.png" style="height:5.5rem;" id="shanghuImg" />
+                    </div>
+                </div>
+            </div>
+        </li>
+    </ul>
+
+    <section class="aui-content-padded" onclick="submit()" style="padding-top:20px;">
+        <div class="aui-btn aui-btn-block aui-btn-success aui-btn-sm" tapmode>提交审核</div>
+    </section>
+</body>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../script/common.js"></script>
+<script type="text/javascript" src="../../script/config.js"></script>
+<script type="text/javascript">
+    //引用公共js方法
+    var Comm = Common();
+    var Config = Config();
+    apiready = function() {
+        var banbenId = api.pageParam.banbenId;
+        if (banbenId == "1") {
+            var uhide = $api.domAll(".u-hide");
+            for (var i = 0; i < uhide.length; i++) {
+                $api.addCls(uhide[i], 'uhide');
+            }
+        }
+    };
+
+    function openCamera(id) {
+        api.actionSheet({
+            title: '请选择',
+            cancelTitle: '取消',
+            buttons: ['拍照', '从相册选择']
+        }, function(ret, err) {
+            var index = ret.buttonIndex;
+            if (index == 1) { //拍照
+                fnCamera(id);
+            } else if (index == 2) { //相册选择
+                fnAlbum(id);
+            }
+        });
+    }
+
+    var yingyeImg; //营业执照
+    var shanghuImg; //商户图标
+    function fnCamera(id) {
+        api.getPicture({
+            sourceType: 'camera',
+            encodingType: 'png',
+            mediaValue: 'pic',
+            allowEdit: false,
+            quality: 96,
+            saveToPhotoAlbum: false
+        }, function(ret, err) {
+            //alert(JSON.stringify(ret));
+            // 获取拍照图像并剪辑
+            if (ret) {
+                if (id == 1 && ret.data) {
+                    $api.attr($api.byId('yingyeImg'), 'src', ret.data);
+                    yingyeImg = ret.data;
+                } else if (id == 2 && ret.data) {
+                    $api.attr($api.byId('shanghuImg'), 'src', ret.data);
+                    shanghuImg = ret.data;
+                }
+            }
+        });
+    }
+    //从相册选取图片
+    function fnAlbum(id) {
+        api.getPicture({
+            sourceType: 'library',
+            encodingType: 'png',
+            mediaValue: 'pic',
+            allowEdit: false,
+            quality: 96,
+            saveToPhotoAlbum: false
+        }, function(ret, err) {
+            //alert(JSON.stringify(ret));
+            if (ret) {
+                if (id == 1 && ret.data) {
+                    $api.attr($api.byId('yingyeImg'), 'src', ret.data);
+                    yingyeImg = ret.data;
+                } else if (id == 2 && ret.data) {
+                    $api.attr($api.byId('shanghuImg'), 'src', ret.data);
+                    shanghuImg = ret.data;
+                }
+            }
+        });
+    }
+    //提交数据
+    function submit() {
+        var token = $api.getStorage('token');
+        var classId = api.pageParam.classId;
+        var adcode = $api.getStorage('adcode') || '156330200';
+        var banbenId = api.pageParam.banbenId;
+
+        var shanghuName = $api.val($api.byId('shanghuName'));
+        var xinyong = $api.val($api.byId('xinyong'));
+        var content = $api.val($api.byId('content'));
+        var company = $api.val($api.byId('company'));
+
+        if (!shanghuName) {
+            api.alert({
+                msg: "请输入商户名称"
+            });
+            return false;
+        } else if (!content) {
+            api.alert({
+                msg: "请输入产品简介"
+            });
+            return false;
+        } else if (!shanghuImg) {
+            api.alert({
+                msg: "请上传商户图标！"
+            });
+            return false;
+        }
+
+        if (banbenId == 2) {
+            if (!xinyong) {
+                api.alert({
+                    msg: "请输入企业信用代码！"
+                });
+                return false;
+            } else if (!yingyeImg) {
+                api.alert({
+                    msg: "请上传企业营业执照！"
+                });
+                return false;
+            }else if(!company){
+              api.alert({
+                  msg: "请输入公司名称！"
+              });
+              return false;
+            }
+        }
+        var paraData = {
+                values: {
+                    "token": token,
+                    "citycode": adcode,
+                    "creditCode": xinyong,
+                    "typeId": banbenId,
+                    "title": shanghuName,
+                    "content": content,
+                    "belongId": classId,
+                    "companyName": company
+                },
+                files: {
+                    "businessLicenseFile": yingyeImg, //营业执照
+                    "merchantFile": shanghuImg //商户图标
+                }
+            }
+            //alert(JSON.stringify(paraData));
+        api.showProgress({
+            title: '提交中...',
+            modal: false
+        });
+        Comm.ajax(Config.getRuzhuUrl, paraData, "post", function(res) {
+            api.hideProgress();
+            //alert(JSON.stringify(res));
+            if (res.state == "1") {
+                api.confirm({
+                    title: '提示消息',
+                    msg: '提交成功',
+                    buttons: ['关闭页面', '取消']
+                }, function(ret, err) {
+                    var index = ret.buttonIndex; //1-关闭
+                    if (index == 1) {
+                        api.closeWin({
+                            name: 'ruzhuBanben_win'
+                        });
+                        api.closeWin({
+                            name: 'ruzhuClass_win'
+                        });
+                        api.closeWin({});
+                    }
+                });
+            } else {
+                api.alert({
+                    msg: res.message,
+                });
+            }
+        });
+    }
+</script>
+
+</html>

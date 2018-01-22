@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>com.apple.developer.associated-domains</key><!--固定key值-->
+    <array>
+     <!--这里换成你在mob后台获取到的iOS的“Universal Link”值-->
+        <string>applinks:7sel.ulml.mob.com</string>
+    </array>
+</dict>
+</plist>
