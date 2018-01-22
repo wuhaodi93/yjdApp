@@ -1,0 +1,46 @@
+html, body {
+    background-color: #f4f5f6 !important;
+}
+
+[v-cloak] {
+    display: none !important;
+}
+
+.noData {
+    text-align: center;
+    padding: 120px 0;
+}
+
+.noData img {
+    width: 80px;
+    height: 65px;
+    margin: 0 auto;
+}
+
+.one-row {
+    display: block !important;
+    width: 10rem;
+    word-break: keep-all;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.noData div {
+    color: gray;
+    font-size: 14px;
+    margin-top: 10px;
+}
+
+.error-wifi{
+  text-align: center;
+  padding: 120px 0;
+}
+.error-wifi img{
+  width: 80px;
+  height: 65px;
+  margin: 0 auto;
+}
+.uhide{
+  display: none !important;
+}

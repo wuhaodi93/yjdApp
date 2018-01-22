@@ -1,0 +1,64 @@
+html,
+body {
+    height: 100%;
+    background-color: #f0f0f0;
+}
+
+.text-white {
+    color: #ffffff !important;
+}
+.text-light {
+    color: #999 !important;
+}
+.bg-white {
+    background-color: #ffffff;
+}
+.aui-grid [class*=aui-col-] {
+    padding: 0;
+}
+.user-info {
+    width: 150%;
+    position: relative;
+    left: -25%;
+    padding-left: 25%;
+    border-bottom-left-radius: 50%;
+    border-bottom-right-radius: 50%;
+    padding-bottom: 1.5rem;
+}
+
+.aui-grid .aui-dot {
+    top: 0rem;
+}
+.label-cont {
+    display: block;
+    height: 1.8rem;
+    line-height: 1.8rem;
+}
+.label-icon {
+    display: block;
+    width: 1.8rem;
+    height: 1.8rem;
+    border-radius: 50%;
+    margin: 0 auto;
+    line-height: 1.8rem;
+    text-align: center;
+}
+.label-cont .aui-iconfont {
+    font-size: 1rem;
+}
+.label-icon .aui-iconfont {
+    color: #ffffff;
+    font-size: 0.8rem;
+}
+.font-size-26 {
+    font-size: 1.3rem !important;
+}
+.aui-grid-label {
+    color: #666 !important;
+}
+
+
+
+.aui-bg-info2 {
+background-color: rgb(60, 179, 113) !important;
+}

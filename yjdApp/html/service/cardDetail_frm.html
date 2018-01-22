@@ -1,0 +1,174 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>Hello APP</title>
+    <link rel="stylesheet" type="text/css" href="../../css/aui.css" />
+    <style>
+        html,
+        body {
+            height: 100%;
+        }
+
+        #wrap {
+            /*background: url('../../image/service/ss.png') no-repeat;*/
+            background-size: cover;
+            background-attachment: fixed;
+            overflow: auto;
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        #wrap img {
+            background-size: cover;
+            background-attachment: fixed;
+            overflow: auto;
+        }
+
+        .login-input {
+            background-color: rgba(0, 0, 0, 0.05);
+            width: 90%;
+            margin: 10px auto !important;
+            border-radius: 30px;
+            height: 2.25rem;
+            padding-left: 0.75rem;
+            border: none;
+        }
+
+        .aui-list {
+            border: none;
+            background-size: 100% 1px;
+            background-repeat: no-repeat;
+            background-position: top;
+            background-image: linear-gradient(0, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0) 50%, transparent 50%);
+            border-radius: 5px;
+            background-color: transparent !important;
+        }
+
+        .aui-content {
+            position: absolute;
+            top: 9rem;
+            left: 0;
+            z-index: 2;
+            width: 100%;
+        }
+
+        .uhide {
+            display: none !important;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="wrap">
+        <div class="content-bg">
+            <img src="../../image/service/a-11.png" />
+        </div>
+        <section class="aui-content">
+            <ul class="aui-list">
+                <li class="login-input">
+                    <div class="aui-list-item-inner">
+                        <div class="aui-list-item-input">
+                            <input type="text" placeholder="请输入查询的真实姓名" id="Name">
+                        </div>
+                    </div>
+                </li>
+                <li class="login-input">
+                    <div class="aui-list-item-inner">
+                        <div class="aui-list-item-input">
+                            <input type="text" placeholder="请输入18位有效身份证号码" id="IDCard">
+                        </div>
+                    </div>
+                </li>
+                <li class="login-input u-hide">
+                    <div class="aui-list-item-inner">
+                        <div class="aui-list-item-input">
+                            <input type="text" placeholder="请输入被查询手机号" id="phoneNumber">
+                        </div>
+                    </div>
+                </li>
+            </ul>
+            <section class="aui-content-padded" onclick="submit()">
+                <div class="aui-btn aui-btn-block aui-btn-success aui-btn-sm" id="queryBtn">查询</div>
+            </section>
+        </section>
+    </div>
+</body>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../script/common.js"></script>
+<script type="text/javascript" src="../../script/config.js"></script>
+<script type="text/javascript">
+    $api.byId('wrap').style.height = document.body.offsetHeight + 'px';
+    //引用公共js方法
+    var Comm = Common();
+    var Config = Config();
+    apiready = function() {
+        if (api.pageParam.fuwuId != 42) {
+            var uhide = $api.domAll(".u-hide");
+            for (var i = 0; i < uhide.length; i++) {
+                $api.addCls(uhide[i], 'uhide');
+            }
+        }
+    };
+
+    function submit() {
+        var Name = $api.val($api.byId('Name'));
+        var phoneNumber = $api.val($api.byId('phoneNumber'));
+        var IDCard = $api.val($api.byId('IDCard'));
+        var fuwuId = api.pageParam.fuwuId;
+        var token = $api.getStorage('token');
+        if (Name == "" || Name == null || Name == undefined) {
+            api.alert({
+                msg: "请输入姓名"
+            });
+            return false;
+        } else if (IDCard == "" || IDCard == null || IDCard == undefined) {
+            api.alert({
+                msg: "请输入身份证"
+            });
+            return false;
+        }
+        if (fuwuId == 42) {
+            if (phoneNumber == "" || phoneNumber == null || phoneNumber == undefined) {
+                api.alert({
+                    msg: "请输入手机号"
+                });
+                return false;
+            }
+        }
+
+        api.showProgress({
+            title: '正在查询',
+            modal: false
+        });
+
+        var queryUrl = Config.getServiceQueryUrl + "?cardNo=" + IDCard + "&name=" + Name + "&id=" + fuwuId + "&token=" + token + "&queryPhone=" + phoneNumber;
+        Comm.ajax(queryUrl, "", "get", function(res) {
+            //alert(JSON.stringify(res));
+            api.hideProgress();
+            if (res.state == "1") {
+                api.openWin({
+                    name: 'queryResult_win',
+                    url: 'queryResult_win.html',
+                    pageParam: {
+                        "queryResult": res.data
+                    }
+                });
+                setTimeout(function() {
+                     api.closeWin({});
+                }, 1000);
+            } else {
+                api.alert({
+                    msg: res.message,
+                });
+            }
+        });
+    }
+</script>
+
+</html>

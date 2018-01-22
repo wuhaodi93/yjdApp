@@ -1,0 +1,178 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>入驻记录</title>
+    <link rel="stylesheet" type="text/css" href="../../css/aui.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/common.css" />
+    <style>
+        body {
+            background-color: #eee;
+        }
+
+        .ul-list {
+            margin: 15px;
+        }
+
+        .list-item {
+            padding: 0.4rem 0.75rem;
+            border-top: solid 1px #f5f5f5;
+        }
+
+        .aui-list .aui-list-item-title {
+            font-size: 0.7rem;
+            position: relative;
+            max-width: 100%;
+            color: #757575;
+        }
+
+        .test-li {
+            display: block;
+            padding-top: 0.5rem;
+            padding-bottom: 0.5rem;
+        }
+
+        .block-inner {
+            display: block !important;
+        }
+
+        .aui-list {
+            border: none;
+            background-size: 100% 1px;
+            background-repeat: no-repeat;
+            background-position: top;
+            background-image: linear-gradient(0, #fff, #fff 50%, transparent 50%);
+            border-radius: 5px;
+        }
+
+        .aui-list-header {
+            text-align: center;
+            display: block !important;
+            font-size: 0.7rem !important;
+            color: orange;
+            background-color: #fff !important;
+            border-top-left-radius: 5px;
+            border-top-right-radius: 5px;
+        }
+        .date-time {
+            padding: 10px 0  0 0;
+            text-align: center;
+            font-size: 0.65rem;
+            color: #757575;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="ruzhuNote"></div>
+    <script type="template" id="ruzhuNote-tmpl">
+        {{ if(it.length>0){ }} {{ for(var i=0;i
+        <it.length;i++){ }} <div class="date-time">{{=it[i].createDate}}</div>
+            <ul class="aui-list aui-list-in ul-list" onclick="seeDetail({{=it[i].applyInfoId}})">
+                <li class="list-item">
+                    <div class="aui-list-item-inner">
+                        <div class="aui-row aui-row-padded">
+                            <div class="aui-list-item-title" style="font-weight: 600;color:#000;">{{=it[i].title}}</div>
+                            <div class="aui-col-xs-4">
+                                <img src="{{=it[i].img}}" style="height:4rem;width:90%;" />
+                            </div>
+                            <div class="aui-col-xs-8">
+                                <div class="aui-list-item-title">{{=it[i].content}}</div>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                <li class="list-item" style="padding: 0 0.75rem;">
+                    <div class="aui-list-item-inner">
+                        <div class="aui-list-item-title">查看详情</div>
+                        <img src="../../image/arrow-left.png" style="height:0.8rem;" />
+                    </div>
+                </li>
+            </ul>
+            {{ } }} {{ }else{ }}
+            <div class="noData">
+                <img src="../../image/noData3.png" />
+                <div>暂无数据</div>
+            </div>
+            {{ } }}
+    </script>
+</body>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../script/doT.min.js"></script>
+<script type="text/javascript" src="../../script/common.js"></script>
+<script type="text/javascript" src="../../script/config.js"></script>
+<script type="text/javascript">
+    //引用公共js方法
+    var Comm = Common();
+    var Config = Config();
+    apiready = function() {
+        getRuzhuNote(1);
+        fnInitPushRefresh();
+    };
+
+    var ruzhuNoteArry = [];
+    //获取入驻记录
+    function getRuzhuNote(currentPage) {　
+        var token = $api.getStorage('token');
+        //var currentPage = 1;
+        var getRuzhuNoteUrl = Config.getRuzhuNoteUrl + "?token=" + token + "&currentPage=" + currentPage;
+        api.showProgress({
+            title: '努力加载中...',
+            text: '先喝杯茶...',
+            modal: false
+        });
+        //获取列表项
+        Comm.ajax(getRuzhuNoteUrl, "", "get", function(res) {
+            //alert(JSON.stringify(res)); //res.data.pageInfo
+            api.hideProgress();
+            if (res.state == "1") {
+                var tmpl = doT.template($api.byId('ruzhuNote-tmpl').innerHTML);
+                if (res.data.pageInfo.length > 0) {
+                    ruzhuNoteArry = ruzhuNoteArry.concat(res.data.pageInfo);
+                    //alert(JSON.stringify(ruzhuNoteArry))
+                    $api.byId('ruzhuNote').innerHTML = tmpl(ruzhuNoteArry);
+                } else {
+                    if (res.data.pageObject.allPage == 0) {
+                        $api.byId('ruzhuNote').innerHTML = tmpl("");
+                    }
+                    api.removeEventListener({
+                        name: 'scrolltobottom'
+                    });
+                }
+            } else {
+                api.alert({
+                    msg: res.message,
+                });
+            }
+        });
+    }
+    var i = 1;
+    // 下拉加载更多
+    function fnInitPushRefresh() {
+        api.addEventListener({
+            name: 'scrolltobottom',
+            extra: {
+                threshold: 200
+            }
+        }, function(ret, err) {
+            i = i + 1;
+            getRuzhuNote(i);
+        });
+    };
+
+    function seeDetail(applyInfoId){
+     api.openWin({
+         name: 'ruzhuDetail_win',
+         url: 'ruzhuDetail_win.html',
+         pageParam: {
+             "applyInfoId": applyInfoId
+         }
+     });
+
+    }
+</script>
+
+</html>

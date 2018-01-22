@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <title>我的页面</title>
+    <link rel="stylesheet" type="text/css" href="../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../css/my_frame.css" />
+    <link rel="stylesheet" type="text/css" href="../css/aui.css" />
+    <style>
+        .aui-bg-info2 {
+            background-color: #009688 !important;
+        }
+
+        .aui-list .aui-list-item:active {
+            background-color: #009688 !important;
+        }
+
+        .my-icon {
+            width: 1.8rem;
+            height: 1.8rem;
+            line-height: 1.8rem;
+            margin: 0 auto;
+        }
+
+        .uhide {
+            display: none !important;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- 顶部 -->
+    <section class="aui-content bg-white aui-margin-b-15">
+        <div class="aui-list aui-media-list aui-list-noborder aui-bg-info2 user-info">
+            <div class="aui-list-item aui-list-item-middle">
+                <div class="aui-media-list-item-inner ">
+                    <div class="aui-list-item-media" style="width:3rem;padding-right:0;" onclick="openPage(0)">
+                        <img src="../image/avaterInit.png" style="width:2.8rem;height:2.8rem;" class="aui-img-round" id="avater">
+                    </div>
+                    <div class="aui-list-item-inner login" id="login" onclick="openPage(0)">
+                        <div class="aui-list-item-text text-white aui-font-size-18" id="userName"></div>
+                        <div class="aui-list-item-text text-white">
+                            <div><i class="aui-iconfont aui-icon-mobile aui-font-size-14"></i><span id="phone"></span></div>
+                        </div>
+                    </div>
+                    <div class="aui-list-item-inner noLogin" id="noLogin" onclick="openLogin()">
+                        <div class="aui-list-item-text text-white">
+                            <div>您还未登录，去登录</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="aui-grid  ">
+            <div class="aui-row">
+                <div class="aui-col-xs-4" onclick="openPage(1)">
+                    <img class="my-icon" src="../image/my/shiming5.png" />
+                    <div class="aui-grid-label aui-font-size-12">实名认证</div>
+                </div>
+                <div class="aui-col-xs-4" onclick="openPage(2)">
+                    <img class="my-icon" src="../image/my/ruzhu2.png" />
+                    <div class="aui-grid-label aui-font-size-12">申请入驻</div>
+                </div>
+                <div class="aui-col-xs-4" onclick="openPage(3)">
+                    <img class="my-icon" src="../image/my/daili4.png" />
+                    <div class="aui-grid-label aui-font-size-12">入驻明细</div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="aui-content bg-white aui-margin-b-15 aui-margin-t-15">
+        <div class="aui-grid aui-padded-b-15 aui-padded-t-15">
+            <div class="aui-row">
+                <div class="aui-col-xs-3" onclick="openPage(4)">
+                    <img class="my-icon" src="../image/my/yuyue2.png" />
+                    <div class="aui-grid-label aui-font-size-12">申请记录</div>
+                </div>
+                <div class="aui-col-xs-3" onclick="openPage(5)">
+                    <img class="my-icon" src="../image/my/yu4.png" />
+                    <div class="aui-grid-label aui-font-size-12">贷款记录</div>
+                </div>
+                <div class="aui-col-xs-3" onclick="openPage2(6)">
+                    <img class="my-icon" src="../image/my/fenxiang.png" />
+                    <div class="aui-grid-label aui-font-size-12">分享</div>
+                </div>
+                <div class="aui-col-xs-3" onclick="openPage(7)">
+                    <img class="my-icon" src="../image/my/fankui.png" />
+                    <div class="aui-grid-label aui-font-size-12">用户反馈</div>
+                </div>
+            </div>
+        </div>
+        <div class=" aui-grid aui-padded-b-15 aui-padded-t-15 aui-border-t">
+            <div class="aui-row">
+                <div class="aui-col-xs-3" onclick="openPage2(8)">
+                    <img class="my-icon" src="../image/my/about.png" />
+                    <div class="aui-grid-label aui-font-size-12">关于我们</div>
+                </div>
+            </div>
+        </div>
+    </section>
+</body>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/common.js"></script>
+<script type="text/javascript" src="../script/config.js"></script>
+<script type="text/javascript">
+    //引用公共js方法
+    var Comm = Common();
+    var Config = Config();
+    apiready = function() {
+        var token = $api.getStorage('token');
+        if (token) {
+            $api.addCls($api.byId('noLogin'), 'uhide');
+            getUserInfo();
+            //下拉刷新
+            api.setRefreshHeaderInfo({
+                visible: true,
+                loadingImg: 'widget://image/refresh.png',
+                bgColor: '#f0f0f0',
+                textColor: '#888',
+                textDown: '下拉刷新...',
+                textUp: '松开刷新...',
+                showTime: true
+            }, function(ret, err) {
+                api.refreshHeaderLoadDone();
+                getUserInfo();
+            });
+        } else {
+            $api.addCls($api.byId('login'), 'uhide');
+        }
+        updateUserInfo();
+        exit();
+    };
+
+    function getUserInfo() {
+        var token = $api.getStorage('token');
+        var getUserInfoUrl = Config.getUserInfoUrl + "?token=" + token;
+        Comm.ajax(getUserInfoUrl, "", "get", function(res) {
+            //alert(JSON.stringify(res));
+            if (res.state == "1") {
+                $api.removeCls($api.byId('login'), 'uhide');
+                $api.addCls($api.byId('noLogin'), 'uhide');
+                $api.setStorage('userInfoData', res.data);
+                var avaterUrl = res.data.img || "../image/avaterInit.png";
+                $api.attr($api.byId('avater'), 'src', avaterUrl);
+                $api.byId('userName').innerHTML = res.data.name;
+                $api.byId('phone').innerHTML = res.data.phone;
+            } else {
+                api.alert({
+                    msg: res.message,
+                });
+            }
+        });
+    }
+
+    //更新用户数据
+    function updateUserInfo() {
+        api.addEventListener({
+            name: 'updateUserInfo'
+        }, function(ret, err) {
+            getUserInfo();
+        });
+    }
+
+    //退出账号
+    function exit() {
+        api.addEventListener({
+            name: 'exit'
+        }, function(ret, err) {
+            $api.addCls($api.byId('login'), 'uhide');
+            $api.removeCls($api.byId('noLogin'), 'uhide');
+            var avaterInit = "../image/avaterInit.png";
+            $api.attr($api.byId('avater'), 'src', avaterInit);
+            $api.rmStorage('userInfoData');
+            $api.rmStorage('token');
+        });
+    }
+
+    function openLogin() {
+        api.openWin({
+            name: 'login_win',
+            url: 'login/login_win.html'
+        });
+    }
+    //必须登录才能点击的
+    function openPage(id) {
+        var token = $api.getStorage('token');
+        if (!token) {
+            api.confirm({
+                title: '提示',
+                msg: '系统检测，您还未登录，请先登录或注册！',
+                buttons: ['去登录', '取消']
+            }, function(ret, err) {
+                //var index = ret.buttonIndex; //1-确定，2-取消
+                if (ret.buttonIndex == 1) {
+                    api.openWin({
+                        name: 'login_win',
+                        url: 'login/login_win.html'
+                    });
+                }
+            });
+            return false;
+        }
+        switch (id) {
+            case 0: //个人信息
+                api.openWin({
+                    name: 'personInfo_win',
+                    url: 'my/personInfo_win.html'
+                });
+                break;
+            case 1: //实名认证
+                api.openWin({
+                    name: 'realName_win',
+                    url: 'my/realName_win.html'
+                });
+                break;
+            case 2: //申请入驻
+                api.openWin({
+                    name: 'ruzhuBanben_win',
+                    url: 'my/ruzhuBanben_win.html'
+                });
+                break;
+            case 3: //入驻记录
+                api.openWin({
+                    name: 'ruzhuNote_win',
+                    url: 'my/ruzhuNote_win.html'
+                });
+                break;
+            case 4: //申请记录
+                api.openWin({
+                    name: 'shenqingNote_win',
+                    url: 'my/shenqingNote_win.html'
+                });
+                break;
+            case 5: //贷款记录
+                api.openWin({
+                    name: 'daikuanNote_win',
+                    url: 'my/daikuanNote_win.html'
+                });
+                break;
+            case 7: //用户反馈　
+                api.openWin({
+                    name: 'userFeedback_win',
+                    url: 'my/userFeedback_win.html'
+                });
+                break;　
+            default:
+        }　
+    }　
+    //不需要登录就能使用
+    function openPage2(id) {
+        switch (id) {
+            case 6: //分享
+                share();
+                break;
+            case 8: //关于我们
+                api.openWin({
+                    name: 'aboutUs_win',
+                    url: 'my/aboutUs_win.html'
+                });
+                break;
+            default:
+        }
+    }
+
+    function share() {
+        var MNActionButton = api.require('MNActionButton');
+        MNActionButton.open({
+            layout: {
+                row: 2,
+                col: 3,
+                rowSpacing: 10,
+                colSpacing: 20,
+                offset: 0
+            },
+            animation: true,
+            autoHide: true,
+            styles: {
+                maskBg: 'rgba(0,0,0,0.2)',
+                bg: '#fff',
+                cancelButton: {
+                    size: 44,
+                    bg: '#fff',
+                    icon: 'widget://res/action-button-cancel.png'
+                },
+                item: {
+                    titleColor: '#888',
+                    titleHighlight: 'dd2727',
+                    titleSize: 12
+                },
+                indicator: {
+                    color: '#c4c4c4',
+                    highlight: '#9e9e9e'
+                }
+            },
+            items: [{
+                icon: 'widget://image/share/qq.png',
+                title: 'QQ好友'
+            }, {
+                icon: 'widget://image/share/qzone.png',
+                title: 'QQ空间'
+            }, {
+                icon: 'widget://image/share/wxsession.png',
+                title: '微信好友'
+            }, {
+                icon: 'widget://image/share/wxtimeline.png',
+                title: '朋友圈'
+            }]
+        }, function(ret) {
+            //alert(JSON.stringify(ret.index));
+            var appDescrip = "姚江贷APP是一款以在线贷款为主题的服务型APP，以用户提出需求的反向电子商务平台，基于地理位置的个人需求平台，是一个能让用户贷款的生活服务类站点。";
+            var shareUrl = "https://www.gxht.net.cn/app_yjdPlatform/appShare.html";
+            var shareImg = "https://www.gxht.net.cn/app_yjdPlatform/common/picture/z01.png";
+            if (ret.index == 0) {
+                Comm.qqShare('QFriend', '姚江贷', appDescrip, shareUrl, shareImg);
+            } else if (ret.index == 1) {
+                Comm.qqShare('QZone', '姚江贷', appDescrip, shareUrl, shareImg);
+            } else if (ret.index == 2) {
+                Comm.wxShare('session', '姚江贷', appDescrip, shareUrl, shareImg);
+            } else if (ret.index == 3) {
+                Comm.wxShare('timeline', '姚江贷', appDescrip, shareUrl, shareImg);
+            }
+        });
+    }
+</script>
+
+</html>

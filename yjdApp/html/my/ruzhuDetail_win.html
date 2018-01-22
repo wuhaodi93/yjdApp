@@ -1,0 +1,69 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <link rel="stylesheet" type="text/css" href="../../css/aui.css" />
+    <style>
+        .aui-bar-nav {
+            background-color: #009688;
+        }
+
+        .fr {
+            float: right;
+            margin-right: 0.75rem;
+        }
+    </style>
+</head>
+
+<body>
+    <header class="aui-bar aui-bar-nav" id="aui-header">
+        <a class="aui-btn aui-pull-left" tapmode onclick="closeWin()">
+            <span class="aui-iconfont aui-icon-close">&nbsp;&nbsp;明细</span>
+        </a>
+        <div class="aui-title"></div>
+        <div class="fr" onclick="shareCode()">
+            <a class="aui-btn aui-pull-left" tapmode>
+                <span class="aui-iconfont aui-icon-share"></span>
+            </a>
+        </div>
+    </header>
+</body>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript">
+    apiready = function() {
+        api.parseTapmode();
+        var header = $api.byId('aui-header');
+        $api.fixStatusBar(header);
+        var headerPos = $api.offset(header);
+        var body_h = $api.offset($api.dom('body')).h;
+        api.openFrame({
+            name: 'ruzhuDetail_frm',
+            url: 'ruzhuDetail_frm.html',
+            bounces: true,
+            rect: {
+                x: 0,
+                y: headerPos.h,
+                w: 'auto',
+                h: 'auto'
+            },
+            pageParam: {
+                "applyInfoId": api.pageParam.applyInfoId
+            }
+        })
+    };
+
+    function closeWin() {
+        api.closeWin({});
+    }
+
+    function shareCode() {
+        api.sendEvent({
+            name: 'shareCode'
+        });
+    }
+</script>
+
+</html>
